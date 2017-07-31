@@ -1,5 +1,5 @@
 ifndef CXXFLAGS
-  CXXFLAGS = -O3 -Wno-format
+  CXXFLAGS = -march=haswell -O3 -Wno-format
 endif
 
 CXXFLAGS += -MMD -ISNAPLib -msse

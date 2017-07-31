@@ -40,6 +40,10 @@ AlignerOptions::AlignerOptions(
     commandLine(i_commandLine),
     indexDir(NULL),
     similarityMapFile(NULL),
+    dbGenomePath(NULL),
+    dbGenomeIndexPath(NULL),
+    dbGenomeHashPath(NULL),
+    dbGenomeOverflowPath(NULL),
     numThreads(GetNumberOfProcessors()),
     bindToProcessors(true),
     ignoreMismatchedIDs(false),
@@ -109,6 +113,10 @@ AlignerOptions::usageMessage()
         "       explicit type specifier (see below).  Use a dash with an explicit type specifier to write to\n"
         "       stdout, so for example -o -sam - would write SAM output to stdout\n"
         "  -d   maximum edit distance allowed per read or pair (default: %d)\n"
+        "  -dg  path of database genome file\n"
+        "  -di  path of database genome index file\n"
+        "  -dh  path of database genome hash file\n"
+        "  -do  path of database overflow file\n"
         "  -n   number of seeds to use per read\n"
         "  -sc  Seed coverage (i.e., readSize/seedSize).  Floating point.  Exclusive with -n.  (default uses -n)\n"
         "  -h   maximum hits to consider per seed (default: %d)\n"
@@ -317,6 +325,22 @@ AlignerOptions::parse(
         }
         n += argsConsumed;
         return true;
+  } else if (strcmp(argv[n], "-dg") == 0) {
+    dbGenomePath = argv[n+1];
+    n++;
+    return true;
+  } else if (strcmp(argv[n], "-di") == 0) {
+    dbGenomeIndexPath = argv[n+1];
+    n++;
+    return true;
+  } else if (strcmp(argv[n], "-dh") == 0) {
+    dbGenomeHashPath = argv[n+1];
+    n++;
+    return true;
+  } else if (strcmp(argv[n], "-do") == 0) {
+    dbGenomeOverflowPath = argv[n+1];
+    n++;
+    return true;
     } else if (strcmp(argv[n], "-P") == 0) {
         doAlignerPrefetch = false;
         return true;
@@ -1003,4 +1027,3 @@ AlignerOptions::useHadoopErrorMessages= false;
 
     bool
 AlignerOptions::outputToStdout = false;
-

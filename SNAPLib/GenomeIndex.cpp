@@ -1606,12 +1606,18 @@ GenomeIndex::printBiasTables()
 }
 
         GenomeIndex *
-GenomeIndex::loadFromDirectory(char *directoryName, bool map, bool prefetch)
+GenomeIndex::loadFromDirectory(AlignerOptions *options, bool map, bool prefetch)
 {
-    int filenameBufferSize = (int)(strlen(directoryName) + 1 + __max(strlen(GenomeIndexFileName), __max(strlen(OverflowTableFileName), __max(strlen(GenomeIndexHashFileName), strlen(GenomeFileName)))) + 1);
-    char *filenameBuffer = new char[filenameBufferSize];
-    
+  char* directoryName = (char*)options->indexDir;
+
+  int filenameBufferSize = 1000;
+  char *filenameBuffer = new char[filenameBufferSize];
+
+  if (options->dbGenomeIndexPath == NULL) {
     snprintf(filenameBuffer, filenameBufferSize, "%s%c%s", directoryName, PATH_SEP, GenomeIndexFileName);
+  } else {
+    strcpy(filenameBuffer, options->dbGenomeIndexPath);
+  }
 
     GenericFile *indexFile = GenericFile::open(filenameBuffer, GenericFile::ReadOnly);
 
@@ -1676,7 +1682,11 @@ GenomeIndex::loadFromDirectory(char *directoryName, bool map, bool prefetch)
 
     size_t overflowTableSizeInBytes = (size_t)index->overflowTableSize * overflowEntrySize;
 
+    if (options->dbGenomeOverflowPath == NULL) {
     snprintf(filenameBuffer,filenameBufferSize, "%s%c%s", directoryName, PATH_SEP, OverflowTableFileName);
+    } else {
+      strcpy(filenameBuffer, options->dbGenomeOverflowPath);
+    }
 
 	if (map) {
 		if (prefetch) {
@@ -1748,7 +1758,11 @@ GenomeIndex::loadFromDirectory(char *directoryName, bool map, bool prefetch)
         index->hashTables[i] = NULL; // We need to do this so the destructor doesn't crash if loading a hash table fails.
     }
 
+  if (options->dbGenomeHashPath == NULL) {
     snprintf(filenameBuffer, filenameBufferSize, "%s%c%s", directoryName, PATH_SEP, GenomeIndexHashFileName);
+  } else {
+    strcpy(filenameBuffer, options->dbGenomeHashPath);
+  }
 
 	GenericFile_Blob *blobFile = NULL;
 	GenericFile *tablesFile = NULL;
@@ -1829,7 +1843,11 @@ GenomeIndex::loadFromDirectory(char *directoryName, bool map, bool prefetch)
 		blobFile = NULL;
 	}
 
+    if (options->dbGenomePath == NULL) {
     snprintf(filenameBuffer, filenameBufferSize, "%s%c%s", directoryName, PATH_SEP, GenomeFileName);
+    } else {
+      strcpy(filenameBuffer, options->dbGenomePath);
+    }
     if (NULL == (index->genome = Genome::loadFromFile(filenameBuffer, chromosomePadding, 0, 0, map))) {
         WriteErrorMessage("GenomeIndex::loadFromDirectory: Failed to load the genome itself\n");
         delete[] filenameBuffer;

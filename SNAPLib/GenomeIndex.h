@@ -29,6 +29,7 @@ Revision History:
 #include "Genome.h"
 #include "ApproximateCounter.h"
 #include "GenericFile_map.h"
+#include "AlignerOptions.h"
 
 class GenomeIndex {
 public:
@@ -75,7 +76,7 @@ public:
     //
     static void runIndexer(int argc, const char **argv);
 
-    static GenomeIndex *loadFromDirectory(char *directoryName, bool map, bool prefetch);
+    static GenomeIndex *loadFromDirectory(AlignerOptions *options, bool map, bool prefetch);
 
     static void printBiasTables();
 

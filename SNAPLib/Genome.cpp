@@ -254,9 +254,11 @@ Genome::loadFromFile(const char *fileName, unsigned chromosomePadding, GenomeLoc
         curName[contigSize] = '\0';
     } // for each contig
 
+    if (GenomeLocationAsInt64(minLocation) != 0) {
     if (0 != loadFile->advance(GenomeLocationAsInt64(minLocation))) {
         WriteErrorMessage("Genome::loadFromFile: _fseek64bit failed\n");
         soft_exit(1);
+    }
     }
 
     size_t readSize;

@@ -61,6 +61,11 @@ struct AlignerOptions : public AbstractOptions
     const char         *commandLine;
     const char         *indexDir;
     const char         *similarityMapFile;
+
+    const char         *dbGenomePath;
+    const char         *dbGenomeIndexPath;
+    const char         *dbGenomeHashPath;
+    const char         *dbGenomeOverflowPath;
     int                 numThreads;
     unsigned            maxDist;
     float               maxDistFraction;
